@@ -1,9 +1,9 @@
 type UrlTableProps = {
-  data: UrlInfoType[];
+  urls: Url_DTO[];
 };
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export function UrlTable({ data }: UrlTableProps) {
+export function UrlTable({ urls }: UrlTableProps) {
   return (
     <div
       style={{
@@ -29,16 +29,16 @@ export function UrlTable({ data }: UrlTableProps) {
         </p>
         <p style={{ fontWeight: 800 }}>Original Url</p>
       </div>
-      {data.map((d) => (
-        <SingleUrl key={d.shortenUrl} {...d} />
+      {urls.map((d) => (
+        <SingleUrl key={d.alias} {...d} />
       ))}
     </div>
   );
 }
 
-type SingleUrlProps = UrlInfoType;
+type SingleUrlProps = Url_DTO;
 
-function SingleUrl({ originalUrl, shortenUrl }: SingleUrlProps) {
+function SingleUrl({ alias, url }: SingleUrlProps) {
   return (
     <div
       style={{
@@ -49,12 +49,12 @@ function SingleUrl({ originalUrl, shortenUrl }: SingleUrlProps) {
       }}
     >
       <a
-        href={`${apiUrl}/${shortenUrl}`}
+        href={`${apiUrl}/${alias}`}
         style={{ textDecoration: "none", minWidth: "200px" }}
       >
-        {apiUrl}/{shortenUrl}
+        {apiUrl}/{alias}
       </a>
-      <p>{originalUrl}</p>
+      <p>{url}</p>
     </div>
   );
 }

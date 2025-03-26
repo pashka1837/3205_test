@@ -1,5 +1,10 @@
-import { Request } from "express";
-import { RequestInfoType, UrlInfoType, UrlMapType } from "./types";
+import {
+  Anal_DTO,
+  Anal_Entity,
+  Url_DTO,
+  Url_Entity,
+  UrlInfo_Entity,
+} from "./types";
 
 export function generateHash() {
   let result = "";
@@ -14,44 +19,46 @@ export function generateHash() {
   return result;
 }
 
-export function generateUrl(urlMap: UrlMapType, alias?: string) {
+export function generateAlias(alias?: string) {
   if (alias) return alias;
-
-  let newUrl = generateHash();
-  while (urlMap.has(newUrl)) {
-    newUrl = generateHash();
-  }
-  return newUrl;
+  return generateHash();
 }
 
-export function saveUrl(
-  urlMap: UrlMapType,
-  originalUrl: string,
-  newUrl: string,
-  expiresAt?: number
-) {
-  const urlInfo: UrlInfoType = {
-    originalUrl,
-    clickCount: 0,
-    createdAt: Date.now(),
-    analytics: [],
-    expiresAt: expiresAt,
-  };
-
-  urlMap.set(newUrl, urlInfo);
+export function checkReqData(originalUrl: any, expiresAt: any, alias: any) {
+  if (
+    !originalUrl ||
+    typeof originalUrl !== "string" ||
+    (expiresAt && (typeof expiresAt !== "number" || expiresAt < Date.now())) ||
+    (alias && (typeof alias !== "string" || alias.length > 20))
+  )
+    return false;
+  return true;
 }
 
-export function checkExpired(urlObj: UrlInfoType) {
-  if (urlObj.expiresAt && urlObj.expiresAt < Date.now()) return true;
+export function checkExpired(expiresAt: Date | null) {
+  if (expiresAt && Date.parse(expiresAt.toString()) < Date.now()) return true;
   return false;
 }
 
-export function updUrlStat(urlObj: UrlInfoType, req: Request) {
-  const { ip } = req;
-  const reqInfo: RequestInfoType = {
-    date: Date.now(),
-    ip: ip || "",
+export function mapAnalDto(analDTO: Anal_DTO): Anal_Entity {
+  return {
+    clickCount: analDTO.clickCount,
+    ips: analDTO.analitic.map((obj) => obj.ip),
   };
-  urlObj.clickCount += 1;
-  urlObj.analytics.push(reqInfo);
+}
+
+export function mapToUrlEnt(urlDto: Url_DTO): Url_Entity {
+  return {
+    alias: urlDto.alias,
+    url: urlDto.url,
+  };
+}
+
+export function mapToUrlInfoEnt(urlDto: Url_DTO): UrlInfo_Entity {
+  return {
+    alias: urlDto.alias,
+    url: urlDto.url,
+    clickCount: urlDto.clickCount,
+    createdAt: urlDto.createdAt,
+  };
 }

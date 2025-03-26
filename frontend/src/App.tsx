@@ -4,17 +4,22 @@ import { CreateUrlForm } from "./Components/CreateUrlForm";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 function App() {
-  const [data, setData] = useState<UrlInfoType[]>([]);
+  const [urls, setUrls] = useState<Url_DTO[]>([]);
+  const [isLoad, setLoad] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
     async function fetchAllUrls() {
+      setLoad(true);
       try {
         const res = await fetch(`${apiUrl}/getall`);
-        const dataFromRes = await res.json();
-        setData(dataFromRes.urlMap.reverse());
-      } catch (error) {
-        console.error(error);
+        const resData = (await res.json()) as GetAllRes;
+        if (resData.success) setUrls(resData.data.reverse());
+        else setErrMsg(resData.message);
+      } catch {
+        setErrMsg("Something went wrong");
       }
+      setLoad(false);
     }
 
     fetchAllUrls();
@@ -27,8 +32,8 @@ function App() {
         gap: "30px",
       }}
     >
-      <CreateUrlForm setData={setData} urlArray={data} />
-      <UrlTable data={data} />
+      <CreateUrlForm setUrls={setUrls} urls={urls} />
+      <UrlTable urls={urls} />
     </div>
   );
 }

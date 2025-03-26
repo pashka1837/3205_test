@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Url {
+  alias      String    @id
+  url        String
+  clickCount Int       @default(0)
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime?
+
+  analitic Analitic[]
+
+  @@unique([url, alias])
+}
+
+model Analitic {
+  id   String   @id @default(uuid())
+  date DateTime @default(now())
+  ip   String
+
+  url   Url    @relation(fields: [urlId], references: [alias])
+  urlId String
+}

@@ -1,13 +1,13 @@
 import { FormEvent, useState } from "react";
 
 type CreateFormProps = {
-  setData: React.Dispatch<React.SetStateAction<UrlInfoType[]>>;
-  urlArray: UrlInfoType[];
+  setUrls: React.Dispatch<React.SetStateAction<Url_DTO[]>>;
+  urls: Url_DTO[];
 };
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export function CreateUrlForm({ setData, urlArray }: CreateFormProps) {
+export function CreateUrlForm({ setUrls, urls }: CreateFormProps) {
   const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -28,22 +28,16 @@ export function CreateUrlForm({ setData, urlArray }: CreateFormProps) {
         method: "POST",
         body: JSON.stringify({
           originalUrl,
-          alias: alias || undefined,
-          expiresAt: expiresAt ? expiresAt * 60000 + Date.now() : undefined,
+          alias: alias,
+          expiresAt: expiresAt ? expiresAt * 60000 + Date.now() : null,
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message);
-        return;
-      }
-      setData([
-        { originalUrl: originalUrl as string, shortenUrl: data.newUrl },
-        ...urlArray,
-      ]);
+      const resData = (await res.json()) as CreateAliasRes;
+      if (resData.success) setUrls([resData.data, ...urls]);
+      else setError(resData.message);
     } catch {
-      setError("something went wrong");
+      setError("Something went wrong");
     }
     formElement.reset();
   }
