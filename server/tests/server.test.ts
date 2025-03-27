@@ -4,7 +4,7 @@ import app from "../src/main";
 describe("POST /shorten alias", () => {
   const testUrlObj = {
     originalUrl: "https://google.com",
-    alias: "xxxx2",
+    alias: "xxxx2" + `${Math.floor(Math.random() * 10)}`,
   };
   it("should create url with alias and return shorten url", async () => {
     const res = await request(app).post("/shorten").send(testUrlObj);
@@ -22,7 +22,7 @@ describe("POST /shorten alias", () => {
 describe("GET /*shortenUrl", () => {
   const testUrlObj = {
     originalUrl: "https://google.com",
-    alias: "xxxxxx33",
+    alias: "xxxxxx33" + `${Math.floor(Math.random() * 10)}`,
   };
 
   it("should return 302 status", async () => {

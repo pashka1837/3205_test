@@ -1,7 +1,5 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
-console.log("apiUrl", apiUrl);
-
 export async function getAllUrls(): Promise<GetAllRes> {
   try {
     const res = await fetch(`${apiUrl}/getall`);

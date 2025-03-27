@@ -26,6 +26,6 @@ COPY --from=build /app/dist ./dist
 
 EXPOSE ${FRONTEND_PORT}
 
-CMD ["http-server", "./dist", "--port=${FRONTEND_PORT}" ]
+CMD ["http-server", "./dist", "--port=3001" ]
 
 

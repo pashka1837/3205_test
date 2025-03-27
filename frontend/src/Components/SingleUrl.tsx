@@ -1,3 +1,5 @@
+import { Button } from "./Button";
+
 type SingleUrlProps = UrlEnt & {
   handleDelete(alias: string): Promise<void>;
   handleGetInfo(alias: string): Promise<void>;
@@ -38,27 +40,9 @@ export function SingleUrl({
       >
         {url}
       </p>
-      <button
-        className="infoBtn"
-        type="button"
-        onClick={() => handleGetInfo(alias)}
-      >
-        Get Info
-      </button>
-      <button
-        className="infoBtn"
-        type="button"
-        onClick={() => handleGetAnal(alias)}
-      >
-        Analytics
-      </button>
-      <button
-        className="infoBtn"
-        type="button"
-        onClick={() => handleDelete(alias)}
-      >
-        Delete
-      </button>
+      <Button text={"Get Info"} handleClick={() => handleGetInfo(alias)} />
+      <Button text={"Analytics"} handleClick={() => handleGetAnal(alias)} />
+      <Button text={"Delete"} handleClick={() => handleDelete(alias)} />
     </div>
   );
 }

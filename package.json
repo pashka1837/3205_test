@@ -1,0 +1,10 @@
+{
+  "name": "3205_test",
+  "version": "1.0.0",
+  "description": "3205 Test Task",
+  "scripts": {
+    "install:all": "(cd ./frontend && npm install) && (cd ../server && npm install && npx prisma generate)"
+  },
+  "author": "Pavel Komarov",
+  "license": "ISC"
+}
