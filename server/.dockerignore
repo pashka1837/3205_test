@@ -1,5 +1,5 @@
-node_modules
+.env*
+../.env*
+tests
+node
 build
-.git
-*.md
-.gitignore

@@ -1,13 +1,12 @@
 import { FormEvent, useState } from "react";
+import { createUrl } from "../lib/apiReq";
 
-type CreateFormProps = {
-  setUrls: React.Dispatch<React.SetStateAction<Url_DTO[]>>;
-  urls: Url_DTO[];
+type UrlFormProps = {
+  setUrls: React.Dispatch<React.SetStateAction<UrlEnt[]>>;
+  urls: UrlEnt[];
 };
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
-export function CreateUrlForm({ setUrls, urls }: CreateFormProps) {
+export function UrlForm({ setUrls, urls }: UrlFormProps) {
   const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -18,28 +17,24 @@ export function CreateUrlForm({ setUrls, urls }: CreateFormProps) {
     const formData = new FormData(e.currentTarget);
     const originalUrl = formData.get("originalUrl");
     const alias = formData.get("alias");
-    const expiresAt = Number(formData.get("expiresAt"));
+    const expiresAt = formData.get("expiresAt");
 
-    try {
-      const res = await fetch(`${apiUrl}/shorten`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          originalUrl,
-          alias: alias,
-          expiresAt: expiresAt ? expiresAt * 60000 + Date.now() : null,
-        }),
-      });
-
-      const resData = (await res.json()) as CreateAliasRes;
-      if (resData.success) setUrls([resData.data, ...urls]);
-      else setError(resData.message);
-    } catch {
-      setError("Something went wrong");
+    if (
+      !originalUrl ||
+      (originalUrl && typeof originalUrl !== "string") ||
+      (alias && typeof alias !== "string") ||
+      (expiresAt && typeof expiresAt !== "string")
+    ) {
+      setError("Wrong data");
+      return;
     }
+
+    const resData = await createUrl({ originalUrl, alias, expiresAt });
+    if (resData.success) setUrls([resData.data, ...urls]);
+    else setError(resData.message);
+
     formElement.reset();
+    return;
   }
 
   return (

@@ -129,7 +129,7 @@ export const deleteUrl_useCase: ApiUseCase = async (req, res) => {
     await deleteUrl(alias);
     res.status(204).json({ message: "Deleted", success: true });
     return;
-  } catch {
+  } catch (e) {
     res.status(404).json({ message: "Not Found", success: false });
     return;
   }

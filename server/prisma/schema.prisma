@@ -24,6 +24,6 @@ model Analitic {
   date DateTime @default(now())
   ip   String
 
-  url   Url    @relation(fields: [urlId], references: [alias])
+  url   Url    @relation(fields: [urlId], references: [alias], onDelete: Cascade)
   urlId String
 }

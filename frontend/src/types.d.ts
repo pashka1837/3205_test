@@ -5,19 +5,58 @@ type UnsuccessRes = {
 
 type GetAllRes =
   | {
-      data: Url_DTO[];
+      data: UrlEnt[];
       success: true;
     }
   | UnsuccessRes;
 
 type CreateAliasRes =
   | {
-      data: Url_DTO;
+      data: UrlEnt;
       success: true;
     }
   | UnsuccessRes;
 
-type Url_DTO = {
+type DeleteAliasRes =
+  | {
+      message: string;
+      success: true;
+    }
+  | UnsuccessRes;
+
+type GetInfoRes =
+  | {
+      data: UrlInfoEnt;
+      success: true;
+    }
+  | UnsuccessRes;
+
+type GetAnalRes =
+  | {
+      data: AnalEnt;
+      success: true;
+    }
+  | UnsuccessRes;
+
+type UrlInfoEnt = {
   url: string;
   alias: string;
+  clickCount: number;
+  createdAt: Date;
+};
+
+type UrlEnt = {
+  url: string;
+  alias: string;
+};
+
+type AnalEnt = {
+  clickCount: number;
+  ips: string[];
+};
+
+type CreateAliasDto = {
+  originalUrl: string;
+  alias: string | null;
+  expiresAt: string | null;
 };

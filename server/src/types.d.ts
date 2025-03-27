@@ -3,12 +3,6 @@ import { request, response, NextFunction } from "express";
 
 export type Url_DTO = Url;
 
-// export type Url_DTO = Pick<Url, "alias" | "url">;
-// export type UrlInfo_DTO = Pick<
-//   Url,
-//   "alias" | "url" | "clickCount" | "expiresAt"
-// >;
-
 type Anal_DTO = {
   clickCount: number;
   expiresAt: Date | null;
